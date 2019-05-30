@@ -65,6 +65,34 @@
       <mu-raised-button @click="closeModal" label="取消" icon="undo"/>
       <mu-raised-button @click="addMovie" label="确定" icon="check" primary/>
     </vodal>
+    <!-- 编辑电影表单 -->
+    <vodal
+      :show="editMovieModal"
+      animation="slideDown"
+      :width="500"
+      :height="480"
+      :closeButton="false"
+    >
+      <mu-text-field v-model="title" fullWidth icon="movie" label="电影名称" labelFloat/>
+      <br>
+      <mu-text-field v-model="poster" fullWidth icon="picture_in_picture" label="海报地址" labelFloat/>
+      <br>
+      <mu-text-field
+        v-model="introduction"
+        multiLine
+        :rows="2"
+        :rowsMax="6"
+        fullWidth
+        icon="description"
+        label="简介"
+        labelFloat
+      />
+      <br>
+      <mu-text-field v-model="rating" fullWidth icon="star" label="评分" labelFloat/>
+      <br>
+      <mu-raised-button @click="closeModal" label="取消" icon="undo"/>
+      <mu-raised-button @click="editMovie" label="确定" icon="check" primary/>
+    </vodal>
   </div>
 </template>
 
@@ -101,6 +129,76 @@ export default {
     // 打开添加电影modal的方法
     openAddMovieModal() {
       this.addMovieModal = true;
+    },
+    closeModal() {
+      this.addMovieModal = false;
+      this.editMovieModal = false;
+      this.title = "";
+      this.poster = "";
+      this.rating = null;
+      this.introduction = "";
+      this.movie_id = "";
+    },
+    addMovie() {
+      this.$axios
+        .post("api/movie", {
+          title: this.title,
+          poster: this.poster,
+          introduction: this.introduction,
+          rating: this.rating
+        })
+        .then(() => {
+          this.toastr.success("添加电影成功");
+          this.addMovieModal = false;
+          this.title = "";
+          this.poster = "";
+          this.rating = null;
+          this.introduction = "";
+          this.movie_id = "";
+          this.getMovies();
+        })
+        .catch(() => {
+          this.toastr.error("保存失败");
+        });
+    },
+    showDetail(title) {
+      this.$router.push(`/movie/${title}`)
+    },
+    openEditMovieModal(movie) {
+      this.editMovieModal = true;
+      this.title = movie.title;
+      this.rating = movie.rating;
+      this.introduction = movie.introduction;
+      this.poster = movie.poster;
+      this.movie_id = movie._id;
+    },
+    removeMovie(movie) {
+      let id = movie._id;
+      this.$axios.delete(`/api/movie/${id}`)
+      .then(() => {
+        this.toastr.success("删除成功");
+        this.getMovies();
+      })
+      
+    },
+    editMovie() {
+      let id = this.movie_id
+      this.$axios.put(`/api/movie/${id}`, {
+        title: this.title,
+        poster: this.poster,
+        introduction: this.introduction,
+        rating: this.rating
+      })
+      .then( () => {
+        this.toastr.success('更新电影成功')
+        this.closeModal()
+        this.getMovies()
+        this.title = ''
+        this.rating = null
+        this.introduction = ''
+        this.poster = ''
+        this.movie_id = ''
+      })
     }
   }
 };

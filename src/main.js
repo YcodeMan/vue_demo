@@ -4,9 +4,12 @@ import toastr from 'toastr'
 import MuseUI  from 'muse-ui'
 import Vodal from 'vodal'
 import router from './router'
+import axios from 'axios'
 import 'toastr/build/toastr.min.css'
 import 'muse-ui/dist/muse-ui.css'
-import axios from 'axios'
+import 'vodal/fade.css'
+import './assets/icon.css'
+
 
 
 
@@ -36,8 +39,16 @@ toastr.options = {
   "hideMethod": "fadeOut"
 }
 
+Vue.filter('castsToString',(casts) => {
+  return casts.map(item => {
+    return item.name
+  })
+})
 
 new Vue({
+  created(){
+    toastr.success('启动成功!')
+  },
   render: h => h(App),
   router
 }).$mount('#app')

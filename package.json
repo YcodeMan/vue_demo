@@ -8,14 +8,15 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.15.3",
     "body-parser": "^1.19.0",
     "core-js": "^2.6.5",
     "express": "^4.17.0",
+    "jquery": "^3.1.1",
     "mongoose": "^5.5.11",
     "muse-ui": "^2.0.0-rc.5",
-    "toastr": "^2.1.4",
-    "vodal": "^2.4.0",
+    "toastr": "^2.1.2",
+    "vodal": "^1.0.3",
     "vue": "^2.6.10",
     "vue-router": "^3.0.6"
   },
